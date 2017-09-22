@@ -8,33 +8,55 @@ namespace Ships
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            int x = 1;
-            int y = 3;
+			static string[,] plocha = new string[10, 10]; // X and Y
+			static string[,] lode = new string[10, 10];
+			static string hor = "";
+			static string rada = "";
 
-            int[,] plocha = new int[11, 11];
-            int[,] lod1 = new int[4, 1];
-            int[,] pozice = new int[5, 5];
+		static void Plocha()
+		{
+			
+			int shipcounter = 0;
+						
+			for (int i = 0; i < plocha.GetLength(0); i++)
+			{
+				for (int p = 0; p < plocha.GetLength(1); p++)
+				{
+					Console.Write(plocha[i, p]);
 
+					if (i == 0)
+					{
+						hor += " " + (p) + " ";
+					}
 
+					plocha[i, p] = " O ";
+					lode[i, p] = " X ";
 
-            for (int i = 0; i < plocha.GetLength(0); i++)
-            {
-                for (int p = 0; p < plocha.GetLength(1); p++)
-                {
-                    Console.Write(plocha[i, p]);
+					rada += plocha[i, p];
 
-                    //plocha[y, x] = 1;
-                    //plocha[4, x] = 1;
+				}
 
+				if (i == 0)
+				{
+					Console.WriteLine(" " + hor);
+				}
 
+				Console.Write(i);
+				Console.WriteLine(rada);
+				Console.WriteLine();
+				rada = "";
 
-                }
+			}
+		}
 
-                Console.WriteLine();
+		static void Pozice(int x, int y, int typ)
+		{
 
-            }
+		}
+
+		static void Main(string[] args)
+		{
+			Plocha();
 
         }
     }
