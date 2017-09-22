@@ -16,20 +16,19 @@ namespace Ships
 
 		static void Plocha()
 		{
-									
 			for (int i = 0; i < plocha.GetLength(0); i++)
 			{
 				for (int p = 0; p < plocha.GetLength(1); p++)
 				{
 					Console.Write(plocha[i, p]);
 
-					if (i == 0)
+					if (i == 0) //
 					{
 						hor += " " + (p) + " ";
 					}
 
-					plocha[i, p] = " * ";
-					lodeplocha[i, p] = " * ";
+					plocha[i, p] = " X ";
+					lodeplocha[i, p] = " X ";
 
 					rada += plocha[i, p];
 
