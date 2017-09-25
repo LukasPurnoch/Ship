@@ -10,10 +10,20 @@ namespace Ships
     {
 			static string[,] plocha = new string[10, 10]; // X and Y
 			static string[,] lodeplocha = new string[10, 10];
-			static int[,] plochalimit = new int[10, 10]; 
+			static int[,] plochalimit = new int[11, 11];
+			static string[,] hitmap = new string[10, 10];
 			static string hor = "";
 			static string rada = "";
+			static int shipctr = 0;
 
+		static void Hit(int q, int w)
+		{
+			if (lodeplocha[q, w] == " O ")
+			{
+				
+			}
+		}
+				
 		static void Plocha()
 		{
 			for (int i = 0; i < plocha.GetLength(0); i++)
@@ -27,8 +37,8 @@ namespace Ships
 						hor += " " + (p) + " ";
 					}
 
-					plocha[i, p] = " X ";
-					lodeplocha[i, p] = " X ";
+					plocha[i, p] = " - ";
+					lodeplocha[i, p] = " - ";
 
 					rada += plocha[i, p];
 
@@ -160,7 +170,7 @@ namespace Ships
 			bool smer = true;
 
 			Plocha();
-
+			
 			while (on)
 			{
 				Console.WriteLine("Typ lodě (1-3)");
@@ -192,6 +202,9 @@ namespace Ships
 
 									pos = false;
 									smer = false;
+
+									shipctr += 1;
+
 								}
 							}
 						}
