@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace Ships
 {
-    class Program
-    {
+	class Program
+	{
 		static string[,] HerniPlocha = new string[10, 10];
 		static string[,] LodePlocha = new string[10, 10];
 		static int[,] LimitPlocha = new int[11, 11];
+		static string[,] HitMap = new string[10, 10];
+		static int Lod4 = 0;
+		static int Lod3 = 0;
+		static int Lod2 = 0;
 
 		static string Horni = "";
 		static string Rada = "";
@@ -21,15 +25,64 @@ namespace Ships
 			bool pos = true;
 			bool smer = true;
 
+
 			VytvoreniPole();
 
 			while (on)
 			{
+				Console.WriteLine("Lod 1 - {0}/2, Lod 2 - {1}/2, Lod 3 - {2}/1", Lod2, Lod3, Lod4);
 				Console.WriteLine("Typ lodě (1-3)");
 				string Typp = Console.ReadLine();
 
 				if (int.TryParse(Typp, out int Typ) && Typ >= 1 && Typ <= 3)
 				{
+
+					if (Typ == 1)
+					{
+						if (Lod2 < 2)
+						{
+							Lod2 += 1;
+							Console.Write("dad");
+						}
+						else
+						{
+							Console.WriteLine("Maximum lodí tohoto typu!");
+							continue;
+						}
+
+					}
+
+					if (Typ == 2)
+					{
+						if (Lod3 < 2)
+						{
+							Lod3 += 1;
+							Console.Write("dad");
+						}
+						else
+						{
+							Console.WriteLine("Maximum lodí tohoto typu!");
+							continue;
+						}
+
+					}
+
+					if (Typ == 3)
+					{
+						if (Lod4 < 1)
+						{
+							Lod4 += 1;
+							Console.Write("dad");
+						}
+						else
+						{
+							Console.WriteLine("Maximum lodí tohoto typu!");
+							continue;
+						}
+
+					}
+
+
 					pos = true;
 
 					while (pos)
@@ -50,13 +103,34 @@ namespace Ships
 								if (int.TryParse(Smerr, out int Smer) && Smer >= 1 && Smer <= 2)
 								{
 									Console.Clear();
+
 									Lode(x, y, Smer, Typ);
 
 									pos = false;
 									smer = false;
 
-									//shipctr += 1;
 									//Test();
+
+									if (Lod2 + Lod3 + Lod4 == 5)
+									{
+									bool Hits = true;
+									on = false;
+									Console.Clear();
+
+									while (Hits)
+									{
+										Console.WriteLine("Střílíš na: ");
+										string xx = Console.ReadLine();
+										string yy = Console.ReadLine();
+
+										if (int.TryParse(yy, out int YY) && int.TryParse(xx, out int XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+										{
+											Console.Clear();
+											Hit(XX, YY);
+										}
+
+									}
+									}
 								}
 							}
 						}
@@ -82,6 +156,7 @@ namespace Ships
 
 					HerniPlocha[i, p] = " - ";
 					LodePlocha[i, p] = " - ";
+					HitMap[i, p] = " - ";
 
 					Rada += HerniPlocha[i, p];
 
@@ -114,15 +189,15 @@ namespace Ships
 
 		static void Lode(int x, int y, int Smer, int Typ)
 		{
-			if(LimitPlocha[x, y] == 0)
+			if (LimitPlocha[x, y] == 0)
 			{
-				for(int m = 0; m < Typ + 1; m++) // m < 3 + 1 ->
+				for (int m = 0; m < Typ + 1; m++) // m < 3 + 1 ->
 				{
 					//Console.Write(m);
 					switch (Smer)
 					{
-						case 1:									// VODOROVNE
-							if(LimitPlocha[x, y - m] == 0)
+						case 1:                                 // VODOROVNE
+							if (LimitPlocha[x, y - m] == 0)
 							{
 								LodePlocha[x, y - m] = " O ";
 								LimitPlocha[x, y - m] = 1;
@@ -219,5 +294,37 @@ namespace Ships
 				Rada = "";
 			}
 		}
-    }
+
+		static void Hit(int x, int y)
+		{
+			if (LodePlocha[x, y] == " O ")
+			{
+				HitMap[x, y] = " 0 ";
+				Console.WriteLine("Trefa!");
+			}
+
+			if (LodePlocha[x, y] != " O ")
+			{
+				HitMap[x, y] = " X ";
+				Console.WriteLine("Vedle!");
+			}
+
+
+			for (int i = 0; i < HitMap.GetLength(0); i++)
+			{
+				for (int j = 0; j < HitMap.GetLength(1); j++)
+				{
+					Rada += HitMap[i, j]; //Vypise cele pole -> Zmeny nastaly pri nastavovani limitu
+				}
+				if (i == 0)
+				{
+					Console.WriteLine(" " + Horni);
+				}
+
+				Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
+				Console.WriteLine(Rada);
+				Rada = "";
+			}
+		}
+	}
 }
