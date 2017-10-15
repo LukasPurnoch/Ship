@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ships
@@ -10,11 +11,19 @@ namespace Ships
 	{
 		static string[,] HerniPlocha = new string[10, 10];
 		static string[,] LodePlocha = new string[10, 10];
+		static string[,] LodePlocha2 = new string[10, 10];
 		static int[,] LimitPlocha = new int[11, 11];
+		static int[,] LimitPlocha2 = new int[11, 11];
 		static string[,] HitMap = new string[10, 10];
+		static string[,] HitMap2 = new string[10, 10];
+		static int Hrac = 1;
+		static int HitCTR1 = 0;
+		static int HitCTR2 = 0;
 		static int Lod4 = 0;
 		static int Lod3 = 0;
 		static int Lod2 = 0;
+		static int ctrlode = 0;
+		static int restart = 0;
 
 		static string Horni = "";
 		static string Rada = "";
@@ -24,121 +33,182 @@ namespace Ships
 			bool on = true;
 			bool pos = true;
 			bool smer = true;
+			bool reset = true;
 
-
-			VytvoreniPole();
-
-			while (on)
+			while (reset && restart == 1)
 			{
-				Console.WriteLine("Lod 1 - {0}/2, Lod 2 - {1}/2, Lod 3 - {2}/1", Lod2, Lod3, Lod4);
-				Console.WriteLine("Typ lodě (1-3)");
-				string Typp = Console.ReadLine();
+				reset = false;
 
-				if (int.TryParse(Typp, out int Typ) && Typ >= 1 && Typ <= 3)
+				VytvoreniPole();
+
+				while (on)
 				{
+					Console.WriteLine("Hrac {0} pokládá lodě!", Hrac);
+					Console.WriteLine("Lod 1 - {0}/1, Lod 2 - {1}/1, Lod 3 - {2}/1", Lod2, Lod3, Lod4);
+					Console.WriteLine("Typ lodě (1-3)");
+					string Typp = Console.ReadLine();
 
-					if (Typ == 1)
+					if (int.TryParse(Typp, out int Typ) && Typ >= 1 && Typ <= 3)
 					{
-						if (Lod2 < 2)
+
+						if (Typ == 1)
 						{
-							Lod2 += 1;
-							Console.Write("dad");
-						}
-						else
-						{
-							Console.WriteLine("Maximum lodí tohoto typu!");
-							continue;
-						}
-
-					}
-
-					if (Typ == 2)
-					{
-						if (Lod3 < 2)
-						{
-							Lod3 += 1;
-							Console.Write("dad");
-						}
-						else
-						{
-							Console.WriteLine("Maximum lodí tohoto typu!");
-							continue;
-						}
-
-					}
-
-					if (Typ == 3)
-					{
-						if (Lod4 < 1)
-						{
-							Lod4 += 1;
-							Console.Write("dad");
-						}
-						else
-						{
-							Console.WriteLine("Maximum lodí tohoto typu!");
-							continue;
-						}
-
-					}
-
-
-					pos = true;
-
-					while (pos)
-					{
-						Console.WriteLine("Zadej souřadnice X a Y (0-9)");
-						string X = Console.ReadLine();
-						string Y = Console.ReadLine();
-
-						if (int.TryParse(Y, out int y) && int.TryParse(X, out int x) && y >= 0 && y <= 9 && x >= 0 && x <= 9)
-						{
-							smer = true;
-
-							while (smer)
+							if (Lod2 < 1)
 							{
-								Console.WriteLine("Směr (1 - Vodorovně, 2 - Svisle)");
-								string Smerr = Console.ReadLine();
+								Lod2 += 1;
+								ctrlode += 1;
+							}
+							else
+							{
+								Console.WriteLine("Maximum lodí tohoto typu!");
+								continue;
+							}
 
-								if (int.TryParse(Smerr, out int Smer) && Smer >= 1 && Smer <= 2)
+						}
+
+						if (Typ == 2)
+						{
+							if (Lod3 < 1)
+							{
+								Lod3 += 1;
+								ctrlode += 1;
+							}
+							else
+							{
+								Console.WriteLine("Maximum lodí tohoto typu!");
+								continue;
+							}
+
+						}
+
+						if (Typ == 3)
+						{
+							if (Lod4 < 1)
+							{
+								Lod4 += 1;
+								ctrlode += 1;
+							}
+							else
+							{
+								Console.WriteLine("Maximum lodí tohoto typu!");
+								continue;
+							}
+
+						}
+
+
+						pos = true;
+
+						while (pos == true && Hrac == 1)
+						{
+							Console.WriteLine("Zadej souřadnice X a Y (0-9)");
+							string X = Console.ReadLine();
+							string Y = Console.ReadLine();
+
+							if (int.TryParse(Y, out int y) && int.TryParse(X, out int x) && y >= 0 && y <= 9 && x >= 0 && x <= 9)
+							{
+								smer = true;
+
+								while (smer)
 								{
-									Console.Clear();
+									Console.WriteLine("Směr (1 - Vodorovně, 2 - Svisle)");
+									string Smerr = Console.ReadLine();
 
-									Lode(x, y, Smer, Typ);
-
-									pos = false;
-									smer = false;
-
-									//Test();
-
-									if (Lod2 + Lod3 + Lod4 == 5)
+									if (int.TryParse(Smerr, out int Smer) && Smer >= 1 && Smer <= 2)
 									{
-									bool Hits = true;
-									on = false;
-									Console.Clear();
+										Console.Clear();
 
-									while (Hits)
-									{
-										Console.WriteLine("Střílíš na: ");
-										string xx = Console.ReadLine();
-										string yy = Console.ReadLine();
+										Lode(x, y, Smer, Typ);
 
-										if (int.TryParse(yy, out int YY) && int.TryParse(xx, out int XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
-										{
-											Console.Clear();
-											Hit(XX, YY);
-										}
+										pos = false;
+										smer = false;
 
-									}
+										//Test();
+									
 									}
 								}
 							}
 						}
+					
+
+						while (pos == true && Hrac == 2)
+						{
+							Console.WriteLine("Zadej souřadnice X a Y (0-9)");
+							string X = Console.ReadLine();
+							string Y = Console.ReadLine();
+
+							if (int.TryParse(Y, out int y) && int.TryParse(X, out int x) && y >= 0 && y <= 9 && x >= 0 && x <= 9)
+							{
+								smer = true;
+
+								while (smer)
+								{
+									Console.WriteLine("Směr (1 - Vodorovně, 2 - Svisle)");
+									string Smerr = Console.ReadLine();
+
+									if (int.TryParse(Smerr, out int Smer) && Smer >= 1 && Smer <= 2)
+									{
+										Console.Clear();
+
+										Lode2(x, y, Smer, Typ);
+
+										pos = false;
+										smer = false;
+
+									}
+								}
+							}
+						}
+
+						if (ctrlode == 3)
+						{
+							Hrac += 1;
+							Lod2 = 0;
+							Lod3 = 0;
+							Lod4 = 0;
+												
+						}
+
+						if (ctrlode == 6 && Hrac == 2)
+						{
+						bool Hits = true;
+						on = false;
+
+						Console.Clear();
+
+						while (Hits)
+						{
+							Console.WriteLine("Hráč 1 střílí na: ");
+							string xx = Console.ReadLine();
+							string yy = Console.ReadLine();
+
+							if (int.TryParse(yy, out int YY) && int.TryParse(xx, out int XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+							{
+								Console.Clear();
+								Hit(XX, YY);
+							}
+
+							Console.WriteLine("Hráč 2 střílí na: ");
+							xx = Console.ReadLine();
+							yy = Console.ReadLine();
+
+							if (int.TryParse(yy, out YY) && int.TryParse(xx, out XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+							{
+								Console.Clear();
+								Hit2(XX, YY);
+							}
+
+							}
+						}
+
+
+
+
 					}
 				}
 
-
 			}
+			
 		}
 
 		static void VytvoreniPole()
@@ -156,7 +226,9 @@ namespace Ships
 
 					HerniPlocha[i, p] = " - ";
 					LodePlocha[i, p] = " - ";
+					LodePlocha2[i, p] = " - ";
 					HitMap[i, p] = " - ";
+					HitMap2[i, p] = " - ";
 
 					Rada += HerniPlocha[i, p];
 
@@ -295,12 +367,174 @@ namespace Ships
 			}
 		}
 
+		static void Lode2(int x, int y, int Smer, int Typ)
+		{
+			if (LimitPlocha2[x, y] == 0)
+			{
+				for (int m = 0; m < Typ + 1; m++) // m < 3 + 1 ->
+				{
+					//Console.Write(m);
+					switch (Smer)
+					{
+						case 1:                                 // VODOROVNE
+							if (LimitPlocha2[x, y - m] == 0)
+							{
+								LodePlocha2[x, y - m] = " O ";
+								LimitPlocha2[x, y - m] = 1;
+								LimitPlocha2[x - 1, y - m] = 1;
+								LimitPlocha2[x + 1, y - m] = 1;
+
+								if (m < 1)
+								{
+									LimitPlocha2[x, y + 1] = 1;
+								}
+								else if (m > Typ - 1)
+								{
+									LimitPlocha2[x, y - m - 1] = 1;
+								}
+							}
+
+							else if (LimitPlocha2[x, y + m] == 0)
+							{
+								LodePlocha2[x, y + m] = " O ";
+								LimitPlocha2[x, y + m] = 1;
+								LimitPlocha2[x - 1, y + m] = 1;
+								LimitPlocha2[x + 1, y + m] = 1;
+
+								if (m < 1)
+								{
+									LimitPlocha2[x, y - 1] = 1;
+								}
+								else if (m > Typ - 1)
+								{
+									LimitPlocha2[x, y + m + 1] = 1;
+								}
+							}
+							else
+							{
+								Console.WriteLine("Pozice je zabraná.");
+							}
+							break;
+
+						case 2:
+							if (x + Typ > 9 && LimitPlocha2[x - m, y] == 0)
+							{
+								LodePlocha2[x - m, y] = " O ";
+								LimitPlocha2[x - m, y] = 1;
+								LimitPlocha2[x - m, y + 1] = 1;
+								LimitPlocha2[x - m, y - 1] = 1;
+
+								if (m < 1)
+								{
+									LimitPlocha2[x + 1, y] = 1;
+								}
+								else if (m > Typ - 1)
+								{
+									LimitPlocha2[x - m - 1, y] = 1;
+								}
+							}
+							else if (LimitPlocha2[x + m, y] == 0)
+							{
+								LodePlocha2[x + m, y] = " O ";
+								LimitPlocha2[x + m, y] = 1;
+								LimitPlocha2[x + m, y + 1] = 1;
+								LimitPlocha2[x + m, y - 1] = 1;
+
+								if (m < 1)
+								{
+									LimitPlocha2[x - 1, y] = 1;
+								}
+								else if (m > Typ - 1)
+								{
+									LimitPlocha2[x + m + 1, y] = 1;
+								}
+							}
+							else
+							{
+								Console.WriteLine("Pozice je zabraná.");
+							}
+							break;
+					}
+				}
+			}
+
+			for (int i = 0; i < LodePlocha2.GetLength(0); i++)
+			{
+				for (int j = 0; j < LodePlocha2.GetLength(1); j++)
+				{
+					Rada += LodePlocha2[i, j]; //Vypise cele pole -> Zmeny nastaly pri nastavovani limitu
+				}
+				if (i == 0)
+				{
+					Console.WriteLine(" " + Horni);
+				}
+
+				Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
+				Console.WriteLine(Rada);
+				Rada = "";
+			}
+		}
+
 		static void Hit(int x, int y)
+		{
+			if (LodePlocha2[x, y] == " O ")
+			{
+				HitMap2[x, y] = " 0 ";
+				Console.WriteLine("Trefa!");
+				HitCTR1 += 1;
+			}
+
+			if (LodePlocha2[x, y] != " O ")
+			{
+				HitMap2[x, y] = " X ";
+				Console.WriteLine("Vedle!");
+			}
+
+
+			for (int i = 0; i < HitMap2.GetLength(0); i++)
+			{
+				for (int j = 0; j < HitMap2.GetLength(1); j++)
+				{
+					Rada += HitMap2[i, j]; //Vypise cele pole -> Zmeny nastaly pri nastavovani limitu
+				}
+				if (i == 0)
+				{
+					Console.WriteLine(" " + Horni);
+				}
+
+				Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
+				Console.WriteLine(Rada);
+				Rada = "";
+			}
+
+			if (HitCTR1 == 9)
+			{
+				Thread.Sleep(5000);
+				Console.Clear();
+				Console.WriteLine("Hráč 1 vyhrál!");
+				Console.WriteLine("Hrát znovu? Y/N");
+				string rrestart = Console.ReadLine();
+
+				if (rrestart == "Y" || rrestart == "y")
+				{
+					restart = 1;
+				}
+				else
+				{
+					Console.WriteLine("Ukončuji");
+					Thread.Sleep(5000);
+					Environment.Exit(0);
+				}
+			}
+		}
+
+		static void Hit2(int x, int y)
 		{
 			if (LodePlocha[x, y] == " O ")
 			{
 				HitMap[x, y] = " 0 ";
 				Console.WriteLine("Trefa!");
+				HitCTR2 += 1;
 			}
 
 			if (LodePlocha[x, y] != " O ")
@@ -324,6 +558,26 @@ namespace Ships
 				Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
 				Console.WriteLine(Rada);
 				Rada = "";
+			}
+
+			if (HitCTR2 == 9)
+			{
+				Thread.Sleep(5000);
+				Console.Clear();
+				Console.WriteLine("Hráč 2 vyhrál!");
+				Console.WriteLine("Hrát znovu? Y/N");
+				string rrestart = Console.ReadLine();
+
+				if (rrestart == "Y" || rrestart == "y")
+				{
+					restart = 1;
+				}
+				else
+				{
+					Console.WriteLine("Ukončuji");
+					Thread.Sleep(5000);
+					Environment.Exit(0);
+				}
 			}
 		}
 	}
