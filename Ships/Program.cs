@@ -23,7 +23,11 @@ namespace Ships
 		static int Lod3 = 0;
 		static int Lod2 = 0;
 		static int ctrlode = 0;
-		static int restart = 0;
+		static int restart = 1;
+		static string xx = "";
+		static string yy = "";
+		static int XX = 0;
+		static int YY = 0;
 
 		static string Horni = "";
 		static string Rada = "";
@@ -38,6 +42,7 @@ namespace Ships
 			while (reset && restart == 1)
 			{
 				reset = false;
+				restart = 0;
 
 				VytvoreniPole();
 
@@ -123,13 +128,12 @@ namespace Ships
 										pos = false;
 										smer = false;
 
-										//Test();
-									
+										
+
 									}
 								}
 							}
 						}
-					
 
 						while (pos == true && Hrac == 2)
 						{
@@ -166,49 +170,91 @@ namespace Ships
 							Lod2 = 0;
 							Lod3 = 0;
 							Lod4 = 0;
-												
+
+							Console.Clear();
+
 						}
 
 						if (ctrlode == 6 && Hrac == 2)
 						{
-						bool Hits = true;
-						on = false;
+							bool Hits = true;
+							bool Turn = true;
+							on = false;
 
-						Console.Clear();
+							Console.Clear();
 
-						while (Hits)
-						{
-							Console.WriteLine("Hráč 1 střílí na: ");
-							string xx = Console.ReadLine();
-							string yy = Console.ReadLine();
-
-							if (int.TryParse(yy, out int YY) && int.TryParse(xx, out int XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+							while (Hits)
 							{
-								Console.Clear();
-								Hit(XX, YY);
-							}
+								Turn = true;
 
-							Console.WriteLine("Hráč 2 střílí na: ");
-							xx = Console.ReadLine();
-							yy = Console.ReadLine();
+								while (Turn)
+								{
+									Console.WriteLine("Hráč 1 střílí na: ");
 
-							if (int.TryParse(yy, out YY) && int.TryParse(xx, out XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
-							{
-								Console.Clear();
-								Hit2(XX, YY);
-							}
+									for (int i = 0; i < HitMap2.GetLength(0); i++)
+									{
+										for (int j = 0; j < HitMap2.GetLength(1); j++)
+										{
+											Rada += HitMap2[i, j]; //Vypise cele pole -> Zmeny nastaly pri nastavovani limitu
+										}
+										if (i == 0)
+										{
+											Console.WriteLine(" " + Horni);
+										}
 
+										Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
+										Console.WriteLine(Rada);
+										Rada = "";
+									}
+
+										xx = Console.ReadLine();
+										yy = Console.ReadLine();
+								
+										if (int.TryParse(yy, out YY) && int.TryParse(xx, out XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+										{
+											Console.Clear();
+											Hit(XX, YY);
+											Turn = false;
+										}
+								}
+
+								Turn = true;
+
+								while (Turn)
+								{
+									Console.WriteLine("Hráč 2 střílí na: ");
+
+									for (int i = 0; i < HitMap.GetLength(0); i++)
+									{
+										for (int j = 0; j < HitMap.GetLength(1); j++)
+										{
+											Rada += HitMap[i, j]; //Vypise cele pole -> Zmeny nastaly pri nastavovani limitu
+										}
+										if (i == 0)
+										{
+											Console.WriteLine(" " + Horni);
+										}
+
+										Console.Write(i);           // i -> Sloupec; hor -> Vodorovne
+										Console.WriteLine(Rada);
+										Rada = "";
+									}
+
+									xx = Console.ReadLine();
+									yy = Console.ReadLine();
+
+									if (int.TryParse(yy, out YY) && int.TryParse(xx, out XX) && YY >= 0 && YY <= 9 && XX >= 0 && XX <= 9)
+									{
+										Console.Clear();
+										Hit2(XX, YY);
+										Turn = false;
+									}
+								}
 							}
 						}
-
-
-
-
 					}
 				}
-
 			}
-			
 		}
 
 		static void VytvoreniPole()
@@ -229,6 +275,38 @@ namespace Ships
 					LodePlocha2[i, p] = " - ";
 					HitMap[i, p] = " - ";
 					HitMap2[i, p] = " - ";
+
+					Rada += HerniPlocha[i, p];
+
+				}
+
+				if (i == 0)
+				{
+					Console.WriteLine(" " + Horni);
+				}
+
+				Console.Write(i);
+				Console.WriteLine(Rada);
+				Console.WriteLine();
+				Rada = "";
+
+			}
+		}
+
+		static void HraciPlocha()
+		{
+			for (int i = 0; i < HerniPlocha.GetLength(0); i++)
+			{
+				for (int p = 0; p < HerniPlocha.GetLength(1); p++)
+				{
+					Console.Write(HerniPlocha[i, p]);
+
+					if (i == 0) //
+					{
+						Horni += " " + (p) + " ";
+					}
+
+					HerniPlocha[i, p] = " - ";
 
 					Rada += HerniPlocha[i, p];
 
